@@ -27,14 +27,17 @@ const Playbar = () => {
         setCheckFirstReload((no) => no + 1)
         setAudioSrcFunc()
         SetSeekBarValue(0)
+
+        if (checkFirstReload > 1) {
+            setPlaySvg(true)
+            audio.current.play()
+        }
+
     }, [url, songIndex])
 
     const setAudioSrcFunc = () => {
-        let currAudio = audio.current
         if (url) {
-            currAudio.src = url[songIndex].mp3
-            audio.current.play()
-            checkFirstReload > 1  && setPlaySvg(true)
+            audio.current.src = url[songIndex].mp3
         }
     };
 
@@ -54,7 +57,6 @@ const Playbar = () => {
         currAudio.currentTime = (value / 100) * currAudio.duration
         SetSeekBarValue(value)
         if (playSvg) {
-            setPlaySvg(true)
             currAudio.play()
         }
     };
@@ -62,7 +64,6 @@ const Playbar = () => {
     const handleCurrentTime = () => {
         let currAudio = audio.current
         setCurrentTime(formatTime(currAudio.currentTime))
-
         let progress = (currAudio.currentTime / currAudio.duration) * 100
         currAudio.duration && SetSeekBarValue(progress)
     };
@@ -77,35 +78,28 @@ const Playbar = () => {
     };
 
     const handleMute = () => {
+        let currAudio = audio.current
         setVolSvg(!volSvg)
-        volSvg ? audio.current.volume = 0 : audio.current.volume = .5
-        volRange.current.value = audio.current.volume
+        volSvg ? currAudio.volume = 0 : currAudio.volume = .5
+        volRange.current.value = currAudio.volume
     };
 
 
     const handleNextSong = () => {
-        let currAudio = audio.current
         if (url.length - 1 > songIndex) {
             setSongIndex((prev) => prev + 1)
-            currAudio.src = url[songIndex].mp3
-            currAudio.play()
-            setPlaySvg(true)
         }
     };
+
     const handlePrevSong = () => {
-        let currAudio = audio.current
         if (songIndex !== 0) {
             setSongIndex((prev) => prev - 1)
-            currAudio.src = url[songIndex].mp3
-            currAudio.play()
-            setPlaySvg(true)
         }
     };
 
     const handleAutoPlay = () => {
-        if (checkbox) {
+        if (checkbox && url.length - 1 > songIndex) {
             setSongIndex((prev) => prev + 1)
-            audio.current.src = url[songIndex].mp3
         }
     };
 

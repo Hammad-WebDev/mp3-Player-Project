@@ -5,9 +5,9 @@ import App from './App.jsx'
 import { SongProvider } from './context/SongContext.jsx'
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  // <StrictMode>
     <SongProvider>
     <App />
     </SongProvider>
-   </StrictMode>,
+  //  </StrictMode>,
 )
